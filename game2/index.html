@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pong</title>
+  <style>
+    canvas { display: block; margin: 0 auto; background: black; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Pong Game</h1>
+  <canvas id="gameCanvas" width="400" height="300"></canvas>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let x = canvas.width / 2, y = canvas.height - 30;
+    let dx = 2, dy = -2, radius = 10;
+    function drawBall() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI*2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+      ctx.closePath();
+      x += dx;
+      y += dy;
+      if(x + dx > canvas.width - radius || x + dx < radius) dx = -dx;
+      if(y + dy > canvas.height - radius || y + dy < radius) dy = -dy;
+    }
+    setInterval(drawBall, 10);
+  </script>
+</body>
+</html>

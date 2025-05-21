@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Click Counter</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    button { font-size: 24px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>Click the Button</h1>
+  <p>Clicks: <span id="count">0</span></p>
+  <button onclick="increment()">Click me!</button>
+  <script>
+    let count = 0;
+    function increment() {
+      count++;
+      document.getElementById('count').innerText = count;
+    }
+  </script>
+</body>
+</html>
