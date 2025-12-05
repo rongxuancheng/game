@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Guess the Number</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    input { font-size: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Guess the Number (1-100)</h1>
+  <input type="number" id="guess" placeholder="Enter guess" />
+  <button onclick="checkGuess()">Guess</button>
+  <p id="message"></p>
+  <script>
+    const number = Math.floor(Math.random() * 100) + 1;
+    function checkGuess() {
+      const guess = parseInt(document.getElementById('guess').value);
+      const msg = document.getElementById('message');
+      if (guess === number) msg.innerText = "Correct!";
+      else if (guess < number) msg.innerText = "Too low!";
+      else msg.innerText = "Too high!";
+    }
+  </script>
+</body>
+</html>
