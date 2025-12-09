@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start mode</title>
+    <style>
+        /* Pure CSS (no external libraries) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* Download card styles */
+        .download-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .download-card h3 {
+            color: #222;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .download-card h3::before {
+            content: "📄";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .download-card p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .file-info {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        /* Download button */
+        .download-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Dynamic toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.error {
+            background: #dc3545; /* Red for error */
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <h1>Start mode</h1>
+    <div class="download-card" 
+         data-file="index.html" 
+         data-size="N/A" 
+         data-type="web"
+         data-download-url="./minecraft.html">
+        <h3>minecraft 1.8 online</h3>
+        <p>minecraft 1.8</p>
+        <!--<div class="file-info">Format: <span class="file-type">web</span> | Size: <span class="file-size">N/A</span></div>-->
+        <button class="download-btn" onclick="window.open('./minecraft.html', '_blank')">Start online</button>
+    </div>
+
+    <div class="download-card" 
+         data-file="1_8.zip" 
+         data-size="12.9 MB" 
+         data-type="zip"
+         data-download-url="./1_8.zip">
+        <h3>minecraft 1.8 offline</h3>
+        <p>You can use it without internet</p>
+        <div class="file-info">Format: <span class="file-type">zip</span> | Size: <span class="file-size">12.9 MB</span></div>
+        <button class="download-btn">Download File</button>
+    </div>
+
+    <div class="download-card" 
+         data-file="1_12.zip" 
+         data-size="15.0 MB" 
+         data-type="zip"
+         data-download-url="./1_12.zip">
+        <h3>minecraft 1.12 offline</h3>
+        <p>You can use it without internet</p>
+        <div class="file-info">Format: <span class="file-type">zip</span> | Size: <span class="file-size">15.0 MB</span></div>
+        <button class="download-btn">Download File</button>
+    </div>
+
+    <!-- Dynamic Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Pure Vanilla JS (no external libraries)
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadCards = document.querySelectorAll('.download-card');
+            const toastContainer = document.getElementById('toast-container');
+
+            // Add dynamic functionality to each card
+            downloadCards.forEach(card => {
+                const btn = card.querySelector('.download-btn');
+                const fileName = card.dataset.file;
+                const fileType = card.dataset.type;
+                const fileSize = card.dataset.size;
+                const downloadUrl = card.dataset.downloadUrl; // Get custom download link
+
+                // Update card info dynamically
+                card.querySelector('.file-type').textContent = fileType;
+                card.querySelector('.file-size').textContent = fileSize;
+
+                // Download button click handler
+                btn.addEventListener('click', function() {
+                    // Validate download URL
+                    if (!downloadUrl || downloadUrl.trim() === '') {
+                        showToast(`Error: No download link for ${fileName}`, true);
+                        return;
+                    }
+
+                    // Show "starting download" toast
+                    showToast(`Downloading: ${fileName}`);
+
+                    // Create hidden download link and trigger click
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = downloadUrl;
+                    downloadLink.download = fileName; // Force browser to download (not open)
+                    downloadLink.target = '_blank'; // Open in new tab (optional)
+                    downloadLink.style.display = 'none';
+
+                    // Add to DOM and trigger download
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+
+                    // Log download action (for debugging)
+                    console.log(`Initiated download: ${fileName} | URL: ${downloadUrl}`);
+                });
+            });
+
+            // Reusable toast notification function
+            function showToast(message, isError = false) {
+                // Create toast element
+                const toast = document.createElement('div');
+                toast.className = `toast ${isError ? 'error' : ''}`;
+                toast.textContent = message;
+                toastContainer.appendChild(toast);
+
+                // Animate toast in
+                setTimeout(() => toast.classList.add('show'), 10);
+
+                // Animate toast out after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

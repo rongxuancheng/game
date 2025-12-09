@@ -3,207 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Start mode</title>
+    <title>Minecraft Downloads Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Pure CSS (no external libraries) */
+        :root {
+            --bg-light: #f9f9f9;
+            --bg-dark: #1e1e2f;
+            --card-light: #ffffff;
+            --card-dark: #2c2c3e;
+            --text-light: #222;
+            --text-dark: #eee;
+            --primary: #3498db;
+            --primary-dark: #5dade2;
+            --hover: #2c3e50;
+            --success: #27ae60;
+            --success-dark: #2ecc71;
+            --error: #e74c3c;
+            --warning: #f39c12;
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f5f5f5;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            padding-bottom: 2rem;
         }
 
-        h1 {
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        header {
+            padding: 2rem 1rem;
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            position: relative;
         }
 
-        /* Download card styles */
-        .download-card {
-            background: white;
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark header h1 {
+            background: linear-gradient(90deg, var(--primary-dark), #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .download-card h3 {
-            color: #222;
-            margin-bottom: 10px;
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 1rem auto 2rem;
+            max-width: 800px;
+            padding: 0 1rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: var(--card-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .search-bar input {
+            background: var(--card-dark);
+            color: var(--text-dark);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem 3rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .download-card {
+            background: var(--card-light);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.dark .download-card {
+            background: var(--card-dark);
+            border-color: rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .download-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        body.dark .download-card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
             display: flex;
             align-items: center;
+            margin-bottom: 1rem;
         }
 
-        .download-card h3::before {
-            content: "📄";
-            margin-right: 10px;
-            font-size: 1.2em;
+        .card-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
         }
 
-        .download-card p {
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        body.dark .card-title {
+            color: var(--text-dark);
+        }
+
+        .card-subtitle {
+            font-size: 1rem;
             color: #666;
-            margin-bottom: 15px;
-            font-size: 0.9em;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
         }
 
-        .file-info {
-            color: #888;
-            font-size: 0.85em;
-            margin-bottom: 15px;
+        body.dark .card-subtitle {
+            color: #aaa;
         }
 
-        /* Download button */
-        .download-btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.03);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        body.dark .card-info {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        body.dark .info-label {
+            color: #bbb;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        body.dark .info-value {
+            color: var(--primary-dark);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .btn {
+            padding: 0.9rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 0.95em;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            border: none;
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        .download-btn:hover {
-            background: #0056b3;
+        .btn-primary {
+            background: var(--primary);
+            color: white;
         }
 
-        /* Dynamic toast notification */
+        .btn-primary:hover {
+            background: var(--hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+        }
+
+        body.dark .btn-secondary {
+            background: rgba(93, 173, 226, 0.2);
+            color: var(--primary-dark);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
+        }
+
+        body.dark .btn-secondary:hover {
+            background: rgba(93, 173, 226, 0.3);
+        }
+
+        /* Toast notification */
         .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #28a745;
+            background: var(--success);
             color: white;
-            padding: 10px 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.3s, transform 0.3s;
             z-index: 1000;
+            font-weight: 600;
+            max-width: 350px;
         }
 
         .toast.error {
-            background: #dc3545; /* Red for error */
+            background: var(--error);
+        }
+
+        .toast.warning {
+            background: var(--warning);
         }
 
         .toast.show {
             opacity: 1;
             transform: translateY(0);
         }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0 1rem 0;
+            color: #888;
+            font-size: 0.9rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        body.dark footer {
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .theme-toggle {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 0 auto 1rem;
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Start mode</h1>
-    <div class="download-card" 
-         data-file="index.html" 
-         data-size="N/A" 
-         data-type="web"
-         data-download-url="./minecraft.html">
-        <h3>minecraft 1.8 online</h3>
-        <p>minecraft 1.8</p>
-        <!--<div class="file-info">Format: <span class="file-type">web</span> | Size: <span class="file-size">N/A</span></div>-->
-        <button class="download-btn" onclick="window.open('./minecraft.html', '_blank')">Start online</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+
+    <header>
+        <h1>Downloads Way</h1>
+        <p style="margin-top: 0.5rem; color: #666;">Play online or download offline versions</p>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search Minecraft versions..." oninput="filterDownloads()">
     </div>
 
-    <div class="download-card" 
-         data-file="1_8.zip" 
-         data-size="12.9 MB" 
-         data-type="zip"
-         data-download-url="./1_8.zip">
-        <h3>minecraft 1.8 offline</h3>
-        <p>You can use it without internet</p>
-        <div class="file-info">Format: <span class="file-type">zip</span> | Size: <span class="file-size">12.9 MB</span></div>
-        <button class="download-btn">Download File</button>
+    <div class="container" id="downloads-container">
+        <!-- Online Version Card -->
+        <div class="download-card" data-title="minecraft 1.8 online" data-type="web" data-version="1.8">
+            <div class="card-header">
+                <div class="card-icon">🌐</div>
+                <h3 class="card-title">Minecraft 1.8 Online</h3>
+            </div>
+            <p class="card-subtitle">Play directly in your browser with no download required. Instant access to Minecraft 1.8 gameplay.</p>
+            <div class="card-info">
+                <div class="info-item">
+                    <span class="info-label">VERSION</span>
+                    <span class="info-value">1.8</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">TYPE</span>
+                    <span class="info-value">Web Browser</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">INTERNET</span>
+                    <span class="info-value">Required</span>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="./minecraft.html" class="btn btn-primary" target="_blank">
+                    🚀 Play Online
+                </a>
+            </div>
+        </div>
+
+        <!-- Offline Version 1.8 -->
+        <div class="download-card" data-title="minecraft 1.8 offline" data-type="zip" data-version="1.8">
+            <div class="card-header">
+                <div class="card-icon">💾</div>
+                <h3 class="card-title">Minecraft 1.8 Offline</h3>
+            </div>
+            <p class="card-subtitle">Download and play without an internet connection. Full Minecraft 1.8 experience on your device.</p>
+            <div class="card-info">
+                <div class="info-item">
+                    <span class="info-label">VERSION</span>
+                    <span class="info-value">1.8</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">FORMAT</span>
+                    <span class="info-value">ZIP Archive</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">SIZE</span>
+                    <span class="info-value">12.9 MB</span>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" data-download-url="./1_8.zip" data-file="minecraft_1.8.zip">
+                    ⬇️ Download
+                </button>
+                <button class="btn btn-secondary" onclick="showDetails('1.8')">
+                    ℹ️ Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Offline Version 1.12 -->
+        <div class="download-card" data-title="minecraft 1.12 offline" data-type="zip" data-version="1.12">
+            <div class="card-header">
+                <div class="card-icon">💾</div>
+                <h3 class="card-title">Minecraft 1.12 Offline</h3>
+            </div>
+            <p class="card-subtitle">The complete Minecraft 1.12 experience for offline play. Includes all features and optimizations.</p>
+            <div class="card-info">
+                <div class="info-item">
+                    <span class="info-label">VERSION</span>
+                    <span class="info-value">1.12</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">FORMAT</span>
+                    <span class="info-value">ZIP Archive</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">SIZE</span>
+                    <span class="info-value">15.0 MB</span>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" data-download-url="./1_12.zip" data-file="minecraft_1.12.zip">
+                    ⬇️ Download
+                </button>
+                <button class="btn btn-secondary" onclick="showDetails('1.12')">
+                    ℹ️ Details
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="download-card" 
-         data-file="1_12.zip" 
-         data-size="15.0 MB" 
-         data-type="zip"
-         data-download-url="./1_12.zip">
-        <h3>minecraft 1.12 offline</h3>
-        <p>You can use it without internet</p>
-        <div class="file-info">Format: <span class="file-type">zip</span> | Size: <span class="file-size">15.0 MB</span></div>
-        <button class="download-btn">Download File</button>
-    </div>
-
-    <!-- Dynamic Toast Container -->
+    <!-- Toast Container -->
     <div id="toast-container"></div>
 
+    <footer>
+        <p>&copy; 2026 Downloads way. All versions are for educational purposes.</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Minecraft is a trademark of Mojang Studios</p>
+    </footer>
+
     <script>
-        // Pure Vanilla JS (no external libraries)
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Load saved theme preference
         document.addEventListener('DOMContentLoaded', function() {
-            const downloadCards = document.querySelectorAll('.download-card');
-            const toastContainer = document.getElementById('toast-container');
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+            }
+            
+            // Add download functionality
+            setupDownloadButtons();
+        });
 
-            // Add dynamic functionality to each card
-            downloadCards.forEach(card => {
-                const btn = card.querySelector('.download-btn');
-                const fileName = card.dataset.file;
-                const fileType = card.dataset.type;
-                const fileSize = card.dataset.size;
-                const downloadUrl = card.dataset.downloadUrl; // Get custom download link
+        // Filter downloads based on search input
+        function filterDownloads() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const cards = document.querySelectorAll('.download-card');
+            
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const type = card.getAttribute('data-type').toLowerCase();
+                const version = card.getAttribute('data-version').toLowerCase();
+                
+                const matches = title.includes(query) || 
+                               type.includes(query) || 
+                               version.includes(query) ||
+                               query === '';
+                
+                card.style.display = matches ? 'flex' : 'none';
+            });
+        }
 
-                // Update card info dynamically
-                card.querySelector('.file-type').textContent = fileType;
-                card.querySelector('.file-size').textContent = fileSize;
-
-                // Download button click handler
+        // Setup download buttons
+        function setupDownloadButtons() {
+            const downloadBtns = document.querySelectorAll('.btn-primary[data-download-url]');
+            
+            downloadBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // Validate download URL
+                    const downloadUrl = this.getAttribute('data-download-url');
+                    const fileName = this.getAttribute('data-file');
+                    
                     if (!downloadUrl || downloadUrl.trim() === '') {
-                        showToast(`Error: No download link for ${fileName}`, true);
+                        showToast(`Error: Download link not available`, true);
                         return;
                     }
-
-                    // Show "starting download" toast
-                    showToast(`Downloading: ${fileName}`);
-
-                    // Create hidden download link and trigger click
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = downloadUrl;
-                    downloadLink.download = fileName; // Force browser to download (not open)
-                    downloadLink.target = '_blank'; // Open in new tab (optional)
-                    downloadLink.style.display = 'none';
-
-                    // Add to DOM and trigger download
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-
-                    // Log download action (for debugging)
-                    console.log(`Initiated download: ${fileName} | URL: ${downloadUrl}`);
+                    
+                    // Show downloading toast
+                    showToast(`Starting download: ${fileName}`, false, 'warning');
+                    
+                    // Create and trigger download
+                    setTimeout(() => {
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = downloadUrl;
+                        downloadLink.download = fileName;
+                        downloadLink.style.display = 'none';
+                        
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        // Show success toast
+                        setTimeout(() => {
+                            showToast(`Download complete: ${fileName}`);
+                        }, 500);
+                        
+                        console.log(`Download initiated: ${fileName}`);
+                    }, 800);
                 });
             });
+        }
 
-            // Reusable toast notification function
-            function showToast(message, isError = false) {
-                // Create toast element
-                const toast = document.createElement('div');
-                toast.className = `toast ${isError ? 'error' : ''}`;
-                toast.textContent = message;
-                toastContainer.appendChild(toast);
+        // Show version details (placeholder function)
+        function showDetails(version) {
+            const details = {
+                '1.8': 'Minecraft 1.8 (Bountiful Update) introduced new blocks, items, and gameplay mechanics.',
+                '1.12': 'Minecraft 1.12 (World of Color Update) focused on creative features and color customization.'
+            };
+            
+            showToast(`${details[version]}`, false, 'warning');
+        }
 
-                // Animate toast in
-                setTimeout(() => toast.classList.add('show'), 10);
-
-                // Animate toast out after 3 seconds
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            }
-        });
+        // Toast notification function
+        function showToast(message, isError = false, type = '') {
+            const toastContainer = document.getElementById('toast-container');
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''} ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
     </script>
 </body>
 </html>
