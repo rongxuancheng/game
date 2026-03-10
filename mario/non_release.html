@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Not Released - Minecraft Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f9f9f9;
+            --bg-dark: #1e1e2f;
+            --card-light: #ffffff;
+            --card-dark: #2c2c3e;
+            --text-light: #222;
+            --text-dark: #eee;
+            --primary: #3498db;
+            --primary-dark: #5dade2;
+            --error: #e74c3c;
+            --error-dark: #ff6b6b;
+            --hover: #2c3e50;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .container {
+            max-width: 700px;
+            padding: 4rem 3rem;
+            background: var(--card-light);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .container {
+            background: var(--card-dark);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient);
+        }
+
+        .error-icon {
+            font-size: 7rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .error-code {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--error);
+        }
+
+        body.dark .error-code {
+            color: var(--error-dark);
+        }
+
+        .message {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        body.dark .message {
+            color: var(--text-dark);
+        }
+
+        .sub-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        body.dark .sub-message {
+            color: #aaa;
+        }
+
+        .btn {
+            padding: 1.1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        body.dark footer {
+            border-top-color: rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 3rem 2rem;
+            }
+            
+            .error-code {
+                font-size: 2.8rem;
+            }
+            
+            .message {
+                font-size: 1.6rem;
+            }
+            
+            .error-icon {
+                font-size: 5rem;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .theme-toggle {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 1rem;
+                display: inline-block;
+            }
+            
+            body {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .error-code {
+                font-size: 2.3rem;
+            }
+            
+            .message {
+                font-size: 1.4rem;
+            }
+            
+            .sub-message {
+                font-size: 1rem;
+            }
+            
+            .error-icon {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+
+    <div class="container">
+        <div class="error-icon">🚧</div>
+        <div class="error-code">Game Not Released</div>
+        <h1 class="message">This Game is Under Development</h1>
+        
+        <p class="sub-message">
+            We are currently working hard to bring you an amazing gaming experience.<br>
+            Please check back later or return to the homepage for other available games.
+        </p>
+
+        <a href="https://manygame.dpdns.org" class="btn">
+            🏠 Return to Homepage
+        </a>
+        
+        <footer>
+            <p>© 2026 Game Hub • Game in Development • All games for educational use only</p></footer>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Load saved theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                document.querySelector('.theme-toggle').textContent = '☀️ Light Mode';
+            }
+        });
+
+        // Easter egg - click on the error icon
+        document.querySelector('.error-icon').addEventListener('click', function() {
+            this.textContent = this.textContent === '🚧' ? '🔨' : '🚧';
+            setTimeout(() => {
+                this.textContent = '🚧';
+            }, 800);
+        });
+    </script>
+</body>
+</html>
