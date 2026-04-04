@@ -1,212 +1,632 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <title>HTML Games Hub</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-light: #f9f9f9;
-      --bg-dark: #1e1e2f;
-      --card-light: #ffffff;
-      --card-dark: #2c2c3e;
-      --text-light: #222;
-      --text-dark: #eee;
-      --primary: #3498db;
-      --hover: #2c3e50;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>HTML GAME HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        :root {
+            --bg-light: #f4f7fc;
+            --bg-dark: #12121a;
+            --card-light: #ffffff;
+            --card-dark: #1e1e2c;
+            --text-light: #1f2937;
+            --text-dark: #eef2ff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent-glow: rgba(59,130,246,0.2);
+            --border-light: #e2e8f0;
+            --border-dark: #2d3748;
+            --shadow-sm: 0 8px 20px rgba(0,0,0,0.05);
+            --shadow-md: 0 20px 35px -10px rgba(0,0,0,0.1);
+        }
 
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-light);
-      color: var(--text-light);
-      transition: background 0.3s, color 0.3s;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.25s ease, color 0.2s ease;
+            line-height: 1.5;
+        }
 
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
 
-    header {
-      padding: 2rem 1rem;
-      text-align: center;
-    }
+        /* 头部区域 */
+        .header-wrapper {
+            position: relative;
+            padding: 2rem 1.5rem 1rem;
+            text-align: center;
+            backdrop-filter: blur(2px);
+        }
 
-    header h1 {
-      font-size: 3rem;
-      margin: 0;
-      font-weight: 800;
-    }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
 
-    .theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      padding: 0.4rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+        .sub {
+            font-size: 0.95rem;
+            opacity: 0.7;
+            margin-top: 0.4rem;
+        }
 
-    .theme-toggle:hover {
-      background: var(--primary);
-      color: white;
-    }
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 100;
+            background: var(--card-light);
+            border: 1px solid var(--border-light);
+            color: var(--primary);
+            padding: 0.5rem 1.1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            font-size: 0.9rem;
+        }
 
-    .search-bar {
-      display: flex;
-      justify-content: center;
-      margin: 1rem auto 2rem;
-    }
+        body.dark .theme-toggle {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+            color: #a5f3fc;
+        }
 
-    .search-bar input {
-      width: 300px;
-      padding: 0.8rem 1rem;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(0.96);
+        }
 
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 2rem;
-      padding: 0 2rem 3rem;
-      max-width: 1200px;
-      margin: auto;
-    }
+        /* 搜索栏 */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin: 0.5rem auto 2rem;
+            padding: 0 1rem;
+        }
 
-    .game-card {
-      background: var(--card-light);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      text-align: center;
-      transition: all 0.3s ease;
-      transform: translateY(0);
-    }
+        .search-box {
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+        }
 
-    body.dark .game-card {
-      background: var(--card-dark);
-    }
+        .search-box input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: none;
+            border-radius: 60px;
+            font-size: 1rem;
+            background: var(--card-light);
+            color: inherit;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
 
-    .game-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
+        body.dark .search-box input {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
 
-    .game-card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-    }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
 
-    .game-card a {
-      display: block;
-      padding: 1rem;
-      font-weight: 600;
-      font-size: 1.2rem;
-      color: var(--primary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+        /* 游戏网格 */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-    .game-card a:hover {
-      color: var(--hover);
-    }
-  </style>
+        /* 卡片样式 */
+        .game-card {
+            background: var(--card-light);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark .game-card {
+            background: var(--card-dark);
+            border-color: rgba(255,255,255,0.05);
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* 图片占位符 / 自动生成缩略图风格 */
+        .card-img {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(145deg, #cbd5e1, #94a3b8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        body.dark .card-img {
+            background: linear-gradient(145deg, #2d3a4e, #1e293b);
+        }
+
+        /* 如果图片加载失败或者没有真实缩略图，展示优雅fallback */
+        .card-img.fallback-img {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+
+        .game-info {
+            padding: 1.2rem 1rem 1.3rem;
+            text-align: center;
+        }
+
+        .game-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.3px;
+        }
+
+        .game-folder {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            font-family: monospace;
+            margin-top: 6px;
+            word-break: break-all;
+        }
+
+        .play-link {
+            display: inline-block;
+            margin-top: 12px;
+            background: var(--primary);
+            color: white !important;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+            pointer-events: auto;
+        }
+
+        .play-link:hover {
+            background: var(--primary-hover);
+        }
+
+        /* 无结果提示 */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem 1.5rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        body.dark footer {
+            border-top-color: rgba(255,255,255,0.05);
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 1rem 2rem;
+                gap: 1.2rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* 刷新/自动检测提示 */
+        .auto-badge {
+            text-align: center;
+            font-size: 0.75rem;
+            margin-top: -0.8rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+        }
+    </style>
 </head>
 <body>
 
-  <button class="theme-toggle" onclick="toggleTheme()"> Dark Mode</button>
+<button class="theme-toggle" id="themeToggleBtn">🌓 深色模式</button>
 
-  <header>
-    <h1> HTML Games Hub</h1>
-  </header>
+<div class="header-wrapper">
+    <h1>🎮 HTML GAME HUB</h1>
+</div>
 
-  <div class="search-bar">
-    <input type="text" id="search" placeholder="Search games..." oninput="filterGames()">
-  </div>
+<div class="search-section">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 搜索游戏名称或文件夹..." autocomplete="off">
+    </div>
+</div>
 
-  <div class="container" id="games">
-    <div class="game-card" data-title="Guess the Number">
-      <img src="thumbs/guess.jpg" alt="Guess the Number">
-      <a href="Guess number/index.html">Guess the Number</a>
-    </div>
-    <div class="game-card" data-title="Snake Game">
-      <img src="thumbs/snake.jpg" alt="Snake Game">
-      <a href="snake-game/index.html">Snake Game</a>
-    </div>
-    <div class="game-card" data-title="2048">
-      <img src="thumbs/2048.jpg" alt="2048">
-      <a href="2048/index.html">2048</a>
-    </div>
-    <div class="game-card" data-title="Tower Blocks">
-      <img src="thumbs/tower.jpg" alt="Tower Blocks">
-      <a href="tower blocks/index.html">Tower Blocks</a>
-    </div>
-    <div class="game-card" data-title="Cut Fruit">
-      <img src="thumbs/cut.jpg" alt="Cut Fruit">
-      <a href="cut fruit/index.html">Cut Fruit</a>
-    </div>
-    <div class="game-card" data-title="MineCraft">
-      <img src="thumbs/minecraft.jpg" alt="MineCraft">
-      <a href="minecraft/index.html">MineCraft</a>
-    </div>
-    <div class="game-card" data-title="Google dinosaur">
-      <img src="thumbs/googledino.jpg" alt="Google dinosaur">
-      <a href="googledino/index.html">Google dinosaur</a>
-    </div>
-    <div class="game-card" data-title="Tetris">
-      <img src="thumbs/tetris.jpg" alt="Tetris">
-      <a href="tetris/index.html">Tetris</a>
-    </div>
-    <div class="game-card" data-title="Cube">
-      <img src="thumbs/cube.jpg" alt="Cube">
-      <a href="cube/index.html">Cube</a>
-    </div>
-    <div class="game-card" data-title="mario">
-      <img src="thumbs/mario.jpg" alt="mario">
-      <a href="mario/non_release.html">mario</a>
-      <!-- <a href="mario/index.html">mario</a> -->
-    </div>
-  </div>
+<div class="container" id="gamesContainer">
+    <!-- 游戏卡片会由js动态生成，实现自动识别 -->
+    <div class="no-results" style="display: none;" id="loadingMsg">⚡ loading files...</div>
+</div>
 
-  <script>
-    function filterGames() {
-      const query = document.getElementById('search').value.toLowerCase();
-      const cards = document.querySelectorAll('.game-card');
-      cards.forEach(card => {
-        const title = card.getAttribute('data-title').toLowerCase();
-        card.style.display = title.includes(query) ? 'block' : 'none';
-      });
+<footer>
+    <p>© 2026 HTML GAME HUB   |   v4.1.0</p>
+</footer>
+
+<script>
+    // --------------------------------------------------------------
+    // 自动识别游戏库配置（核心功能）
+    // 本脚本会自动扫描预定义的「游戏清单」，同时可动态扩展。
+    // 为适应“文件夹和游戏代码的跳转”，我们采用两种策略：
+    // 1. 手动维护一个可靠的游戏列表（支持自定义路径、缩略图回退）
+    // 2. 若需要真正自动扫描服务器目录需后端支持，但前端可通过预定义清单+动态发现模式实现“自动识别”。
+    // 增强功能：代码支持读取本地 manifest.json 的扩展能力，但为单html演示，我们内置一份完整游戏库并允许自由添加。
+    // 同时，为了真实「自动识别文件夹」，利用 fetch 检测游戏入口文件是否存在（index.html），动态构建卡片，并且支持智能fallback。
+    // 以下gamesManifest为基础种子数据，但还会自动根据已配置文件夹进行「可用性探测」。
+    // --------------------------------------------------------------
+
+    // 基础游戏配置数据 (标题、文件夹相对路径、备用缩略图样式、自定义图标)
+    // 保证跳转链接正确指向对应文件夹内的 index.html
+    const GAMES_DB = [
+        { title: "Guess the Number", folder: "Guessnumber", fallbackColor: "#f59e0b", icon: "🎲" },
+        { title: "Snake Game", folder: "snakegame", fallbackColor: "#10b981", icon: "🐍" },
+        { title: "2048", folder: "2048", fallbackColor: "#eab308", icon: "🧩" },
+        { title: "Tower Blocks", folder: "towerblocks", fallbackColor: "#ec489a", icon: "🗼" },
+        { title: "Cut Fruit", folder: "cutfruit", fallbackColor: "#ef4444", icon: "🍉" },
+        { title: "MineCraft", folder: "minecraft", fallbackColor: "#5b8c5a", icon: "⛏️" },
+        { title: "Google Dinosaur", folder: "googledino", fallbackColor: "#4b5563", icon: "🦖" },
+        { title: "Tetris", folder: "tetris", fallbackColor: "#a855f7", icon: "🎮" },
+        { title: "Cube", folder: "cube", fallbackColor: "#06b6d4", icon: "🧊" },
+        { title: "Mario", folder: "mario", fallbackColor: "#dc2626", icon: "🍄", customIndex: "non_release.html" }  // 特殊跳转: 未发布
+    ];
+
+    // 扩展: 自动检测每个游戏入口文件是否存在（index.html 或自定义入口）
+    // 由于前端无法真正list目录，但我们为了提高可用性，对每个游戏尝试fetch游戏入口（静默检测），若检测失败则显示“待完善”但仍然保留跳转。
+    // 同时为了自动识别新的游戏文件夹，开发者可以在本地增加游戏文件夹，并在下方手动追加，但这里提供动态扫描配置思路：用户可以在控制台执行 addGame 来动态扩展。
+    // 但为满足“自动识别文件夹”的语义，我们建立一个智能映射：尝试检测常用路径，并动态渲染卡片。
+    // 此外对于缩略图，由于原始代码引用了 thumbs/*.jpg，若图片存在则展示，否则使用优雅纯色+icon。
+
+    // 增强缩略图处理: 尝试加载 thumbs/对应名称.jpg，如果网络请求失败则回退到渐变背景
+    // 同时需要确保每个游戏有正确跳转链接（自动拼接文件夹及默认index或特定入口）
+
+    // ---------- 辅助函数 ----------
+    // 获取游戏实际跳转URL
+    function getGameUrl(game) {
+        let baseFolder = game.folder;
+        // 处理特殊mario路径指向 non_release.html
+        if (game.customIndex) {
+            // 确保路径规范
+            return `${baseFolder}/${game.customIndex}`;
+        }
+        // 默认加载 index.html
+        return `${baseFolder}/index.html`;
     }
 
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
+    // 智能检测图片是否存在，如果不存在则使用 fallback 元素 (使用Image预加载)
+    function setCardImage(imgElement, game) {
+        // 构造可能的缩略图路径: thumbs/游戏标题小写+去除空格.jpg 兼容原结构
+        let rawTitle = game.title.toLowerCase().replace(/\s/g, '');
+        let possibleThumbPaths = [
+            `thumbs/${game.title.toLowerCase().replace(/\s/g, '')}.jpg`,
+            `thumbs/${game.folder.replace(/\s/g, '')}.jpg`,
+            `thumbs/${game.folder}.jpg`,
+            `thumbs/${game.title}.jpg`,
+        ];
+        // 去重
+        possibleThumbPaths = [...new Set(possibleThumbPaths)];
+
+        let tried = false;
+        const fallbackStyle = () => {
+            if (!tried) {
+                imgElement.style.background = `linear-gradient(135deg, ${game.fallbackColor || '#3b82f6'}, #8b5cf6)`;
+                imgElement.style.display = 'flex';
+                imgElement.style.alignItems = 'center';
+                imgElement.style.justifyContent = 'center';
+                imgElement.innerHTML = game.icon || '🎮';
+                imgElement.style.fontSize = '3rem';
+                imgElement.style.fontWeight = 'bold';
+                imgElement.style.backgroundSize = 'cover';
+                imgElement.style.backgroundImage = 'none';
+                tried = true;
+            }
+        };
+
+        // 尝试加载第一个有效图片
+        const testImage = (url) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        };
+
+        (async () => {
+            let found = false;
+            for (let path of possibleThumbPaths) {
+                const exists = await testImage(path);
+                if (exists) {
+                    imgElement.style.backgroundImage = `url('${path}')`;
+                    imgElement.style.backgroundSize = 'cover';
+                    imgElement.style.backgroundPosition = 'center';
+                    imgElement.innerHTML = ''; // 清空fallback文字
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                fallbackStyle();
+            } else {
+                // 确保内容清空
+                imgElement.innerHTML = '';
+            }
+        })();
+
+        // 立即设置占位背景以防闪烁
+        imgElement.style.background = `linear-gradient(145deg, ${game.fallbackColor || '#64748b'}, #475569)`;
+        imgElement.innerHTML = game.icon || '🎲';
+        imgElement.style.display = 'flex';
+        imgElement.style.alignItems = 'center';
+        imgElement.style.justifyContent = 'center';
+        imgElement.style.fontSize = '2.8rem';
     }
-  </script>
-  <footer>
-    <p>&copy; 2026 HTML Games Hub. v3.32</p>
-  </footer>
+
+    // 检测游戏入口可用性（前端友好提示，但不阻塞跳转，展示状态）
+    async function checkGameAvailability(game) {
+        const url = getGameUrl(game);
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 1500);
+            const res = await fetch(url, { method: 'HEAD', signal: controller.signal });
+            clearTimeout(timeoutId);
+            return res.ok;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // 渲染游戏卡片 (支持动态列表)
+    async function renderGames(gamesToRender) {
+        const container = document.getElementById('gamesContainer');
+        if (!container) return;
+
+        // 清空容器，显示loading占位
+        container.innerHTML = '<div class="no-results" style="display:block;">🔄 刷新游戏大厅中...</div>';
+
+        // 批量渲染，先快速构建dom，避免阻塞
+        const fragment = document.createDocumentFragment();
+        const cardsData = [];
+
+        for (let idx = 0; idx < gamesToRender.length; idx++) {
+            const game = gamesToRender[idx];
+            const gameUrl = getGameUrl(game);
+            // 创建卡片结构
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.setAttribute('data-title', game.title.toLowerCase());
+            card.setAttribute('data-folder', game.folder);
+
+            // 图片区域
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'card-img';
+            // 异步设置图片/fallback样式
+            setCardImage(imgDiv, game);
+
+            // info区域
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'game-info';
+            const titleSpan = document.createElement('div');
+            titleSpan.className = 'game-title';
+            titleSpan.innerText = game.title;
+
+            const folderSpan = document.createElement('div');
+            folderSpan.className = 'game-folder';
+            folderSpan.innerText = `📁 ${game.folder}`;
+
+            const linkBtn = document.createElement('a');
+            linkBtn.className = 'play-link';
+            linkBtn.innerText = '▶ 开始游戏';
+            linkBtn.href = gameUrl;
+            linkBtn.target = '_self';   // 当前窗口跳转，符合游戏体验
+            // 附加可用性小标记（异步检测后更新状态, 不阻塞显示）
+
+            infoDiv.appendChild(titleSpan);
+            infoDiv.appendChild(folderSpan);
+            infoDiv.appendChild(linkBtn);
+            card.appendChild(imgDiv);
+            card.appendChild(infoDiv);
+
+            // 存储game对象以备后续更新可用性标记
+            cardsData.push({ card, game, linkBtn });
+            fragment.appendChild(card);
+        }
+
+        container.innerHTML = '';
+        container.appendChild(fragment);
+
+        // 后台异步检测每个游戏的可用性并在卡片上显示小标记（不影响主要跳转）
+        for (let item of cardsData) {
+            const available = await checkGameAvailability(item.game);
+            const badgeSpan = document.createElement('span');
+            badgeSpan.style.fontSize = '0.65rem';
+            badgeSpan.style.marginLeft = '8px';
+            badgeSpan.style.display = 'inline-block';
+            badgeSpan.style.background = available ? '#22c55e20' : '#f9731620';
+            badgeSpan.style.padding = '2px 8px';
+            badgeSpan.style.borderRadius = '20px';
+            badgeSpan.style.color = available ? '#22c55e' : '#f97316';
+            badgeSpan.innerText = available ? '● ready' : '⚠ error';
+            // 在游戏标题旁添加标记
+            const titleDiv = item.card.querySelector('.game-title');
+            if (titleDiv && !titleDiv.querySelector('.status-badge')) {
+                badgeSpan.classList.add('status-badge');
+                titleDiv.appendChild(badgeSpan);
+            }
+        }
+    }
+
+    // 搜索过滤函数
+    let currentGameList = [...GAMES_DB];
+
+    function filterGamesByQuery(query) {
+        const lowerQuery = query.toLowerCase().trim();
+        const filtered = currentGameList.filter(game =>
+            game.title.toLowerCase().includes(lowerQuery) ||
+            game.folder.toLowerCase().includes(lowerQuery)
+        );
+        const container = document.getElementById('gamesContainer');
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="no-results">😭 Not found "${escapeHtml(query)}" games<br>try to use other key words~</div>`;
+        } else {
+            renderGames(filtered);
+        }
+    }
+
+    // 简单的防XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ---------- 动态添加游戏（自动识别新游戏文件夹的演示）----------
+    // 此函数供开发者在控制台或者未来扩展时动态添加新游戏，模拟「自动识别新增游戏文件夹」。
+    // 用户可以直接在页面中通过 addNewGame 方法增加自定义游戏，无需手动修改HTML核心。
+    window.addCustomGame = function(gameObj) {
+        if (!gameObj.title || !gameObj.folder) {
+            console.warn('需要提供 title 和 folder 属性');
+            return false;
+        }
+        // 避免重复添加
+        const exists = GAMES_DB.some(g => g.folder === gameObj.folder);
+        if (exists) {
+            alert(`游戏文件夹 "${gameObj.folder}" 已存在`);
+            return false;
+        }
+        const newGame = {
+            title: gameObj.title,
+            folder: gameObj.folder,
+            fallbackColor: gameObj.fallbackColor || '#3b82f6',
+            icon: gameObj.icon || '🎮',
+            customIndex: gameObj.customIndex || null
+        };
+        GAMES_DB.push(newGame);
+        currentGameList = [...GAMES_DB];
+        // 刷新当前搜索结果或全部
+        const searchVal = document.getElementById('searchInput').value;
+        if (searchVal.trim() === '') {
+            renderGames(currentGameList);
+        } else {
+            filterGamesByQuery(searchVal);
+        }
+        console.log(`✅ successful: ${newGame.title} -> ${newGame.folder}`);
+        return true;
+    };
+
+    // 自动扫描预置游戏的可达性及动态建议 (展示所有)
+    async function initGameHub() {
+        // 预先对每个游戏额外添加自定义修正：mario特殊跳转已在数据库设置好
+        // 同步更新 currentGameList
+        currentGameList = [...GAMES_DB];
+        await renderGames(currentGameList);
+
+        // 增加自动发现提示：用户可在控制台使用 addCustomGame 来新增任意游戏文件夹
+        console.log('%c🎮 HTML游戏中心已启动 | 自动识别游戏库模式', 'color: #3b82f6; font-size: 16px');
+        console.log('%c💡 提示: 如需新增游戏文件夹，在控制台执行 addCustomGame({ title:"新游戏", folder:"新文件夹名称", icon:"🎯" })', 'background: #222; color: #ffd966');
+
+        // 附加功能: 如果希望自动检测未在列表但实际存在的游戏目录（真实前端无法枚举目录），但我们可以增加一个输入框用于手动添加
+        // 为了更好的体验，在页面底部增加一个隐形快捷键或者浮动添加卡? 保持干净，但提供示例说明。
+        const footerHint = document.createElement('div');
+        footerHint.style.textAlign = 'center';
+        footerHint.style.fontSize = '0.7rem';
+        footerHint.style.marginTop = '10px';
+        footerHint.style.opacity = '0.6';
+        //测试项目
+        // footerHint.innerHTML = '✨ 支持动态添加游戏: 在控制台输入 <code style="background:#00000020;padding:2px 6px;border-radius:8px;">addCustomGame({title:"我的游戏", folder:"mygame"})</code>';
+        document.querySelector('footer')?.appendChild(footerHint);
+    }
+
+    // 监听搜索事件
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            if (query.trim() === '') {
+                renderGames(currentGameList);
+            } else {
+                filterGamesByQuery(query);
+            }
+        });
+    }
+
+    // 深色模式切换（保留原有主题）
+    function initTheme() {
+        const btn = document.getElementById('themeToggleBtn');
+        const isDark = localStorage.getItem('theme') === 'dark';
+        if (isDark) {
+            document.body.classList.add('dark');
+        }
+        btn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const nowDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+            btn.innerHTML = nowDark ? '☀️ light model' : '🌓 dark model';
+        });
+        btn.innerHTML = isDark ? '☀️ light model' : '🌓 dark model';
+    }
+
+    // 启动所有
+    initTheme();
+    //测试启用
+    initGameHub().catch(err => console.warn(err));
+</script>
 </body>
-<style>
-  footer {
-    text-align: center;
-    padding: 1.5rem 0 1rem 0;
-    color: #888;
-    font-size: 1rem;
-    background: none;
-  }
-</style>
+</html>
